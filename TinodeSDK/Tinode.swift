@@ -901,8 +901,11 @@ public class Tinode {
     }
 
     @discardableResult
-    public func reconnectNow() -> Bool {
-        guard connection != nil && !isConnected else { return false }
+    public func reconnectNow(force: Bool = false) -> Bool {
+        guard connection != nil && (force || !isConnected) else { return false }
+        if force {
+            connection?.disconnect()
+        }
         do {
             try connection!.connect(reconnectAutomatically: true)
             return true
